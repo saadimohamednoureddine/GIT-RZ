@@ -1,0 +1,503 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🚗💨 Système de Location de SUPERCARS</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600;700&family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav id="navbar" class="hidden">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <i class="fas fa-car"></i>
+                <span>Supercar Rental</span>
+            </div>
+            <div class="nav-menu">
+                <a href="#" onclick="showPage('dashboard')" id="nav-dashboard">
+                    <i class="fas fa-tachometer-alt"></i> Tableau de Bord
+                </a>
+                <a href="#" onclick="showPage('catalog')" id="nav-catalog">
+                    <i class="fas fa-car-side"></i> Catalogue
+                </a>
+                <a href="#" onclick="showPage('my-rentals')" id="nav-rentals">
+                    <i class="fas fa-clipboard-list"></i> Mes Locations
+                </a>
+                <a href="#" onclick="showPage('profile')" id="nav-profile">
+                    <i class="fas fa-user"></i> Mon Profil
+                </a>
+                <a href="#" onclick="openChatbot()" id="nav-chatbot">
+                    <i class="fas fa-robot"></i> Assistant IA
+                </a>
+                
+                <!-- Admin Menu -->
+                <div class="admin-menu hidden" id="admin-menu">
+                    <a href="#" onclick="showPage('admin-cars')">
+                        <i class="fas fa-car"></i> Gestion SUPERCARS
+                    </a>
+                    <a href="#" onclick="showPage('admin-clients')">
+                        <i class="fas fa-users"></i> Gestion Clients
+                    </a>
+                    <a href="#" onclick="showPage('admin-rentals')">
+                        <i class="fas fa-clipboard-check"></i> Gestion Locations
+                    </a>
+                    <a href="#" onclick="showPage('admin-stats')">
+                        <i class="fas fa-chart-bar"></i> Statistiques
+                    </a>
+                </div>
+                
+                <a href="#" onclick="logout()" class="logout-btn">
+                    <i class="fas fa-sign-out-alt"></i> Déconnexion
+                </a>
+            </div>
+            <div class="user-info">
+                <span id="current-user"></span>
+                <span id="user-role" class="role-badge"></span>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Login Page -->
+    <div id="login-page" class="page active">
+        <div class="login-container">
+            <div class="login-header">
+                <i class="fas fa-car fa-3x"></i>
+                <h1>Location de SUPERCARS</h1>
+                <p>Système de gestion avec Assistant IA</p>
+            </div>
+            
+            <div class="login-form">
+                <h2>Connexion</h2>
+                
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="login-username" placeholder="Nom d'utilisateur" value="admin">
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="login-password" placeholder="Mot de passe" value="admin123">
+                </div>
+                
+                <button class="btn btn-primary" onclick="login()">
+                    <i class="fas fa-sign-in-alt"></i> Se connecter
+                </button>
+                
+                <div class="login-footer">
+                    <p>Pas de compte? <a href="#" onclick="showRegister()">S'inscrire</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Registration Page -->
+    <div id="register-page" class="page">
+        <div class="register-container">
+            <div class="register-header">
+                <i class="fas fa-user-plus fa-3x"></i>
+                <h1>Inscription</h1>
+            </div>
+            
+            <div class="register-form">
+                <div class="input-group">
+                    <i class="fas fa-user"></i>
+                    <input type="text" id="reg-username" placeholder="Nom d'utilisateur">
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-envelope"></i>
+                    <input type="email" id="reg-email" placeholder="Email">
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="reg-password" placeholder="Mot de passe">
+                </div>
+                
+                <div class="input-group">
+                    <i class="fas fa-lock"></i>
+                    <input type="password" id="reg-confirm-password" placeholder="Confirmer le mot de passe">
+                </div>
+                
+                <div class="info-box">
+                    <i class="fas fa-info-circle"></i>
+                    <p>Les informations Nom et Prénom seront complétées après l'inscription dans votre profil client.</p>
+                </div>
+                
+                <button class="btn btn-success" onclick="register()">
+                    <i class="fas fa-user-plus"></i> S'inscrire
+                </button>
+                
+                <div class="register-footer">
+                    <p>Déjà un compte? <a href="#" onclick="showLogin()">Se connecter</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div id="dashboard" class="page">
+        <div class="page-header">
+            <h1><i class="fas fa-tachometer-alt"></i> Tableau de Bord</h1>
+            <p>Bienvenue sur votre espace personnel</p>
+        </div>
+        
+        <div class="stats-grid" id="user-stats">
+            <!-- User stats will be loaded here -->
+        </div>
+        
+        <div class="section">
+            <h2><i class="fas fa-star"></i> SUPERCARS Recommandées</h2>
+            <div class="cars-grid" id="featured-cars">
+                <!-- Featured cars will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Catalog Page -->
+    <div id="catalog" class="page">
+        <div class="page-header">
+            <h1><i class="fas fa-car-side"></i> Catalogue des SUPERCARS</h1>
+            <p>Découvrez notre collection exclusive</p>
+        </div>
+        
+        <div class="search-filters">
+            <div class="search-box">
+                <i class="fas fa-search"></i>
+                <input type="text" id="search-input" placeholder="Rechercher une supercar..." onkeyup="filterCatalog()">
+            </div>
+            
+            <select id="brand-filter" onchange="filterCatalog()">
+                <option value="">Toutes les marques</option>
+            </select>
+            
+            <button class="btn btn-secondary" onclick="resetFilters()">
+                <i class="fas fa-redo"></i> Réinitialiser
+            </button>
+        </div>
+        
+        <div class="cars-grid" id="catalog-cars">
+            <!-- Cars will be loaded here -->
+        </div>
+    </div>
+
+    <!-- My Rentals Page -->
+    <div id="my-rentals" class="page">
+        <div class="page-header">
+            <h1><i class="fas fa-clipboard-list"></i> Mes Locations</h1>
+        </div>
+        
+        <div class="table-container">
+            <table id="rentals-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Supercar</th>
+                        <th>Date Début</th>
+                        <th>Date Fin</th>
+                        <th>Prix (TND)</th>
+                        <th>Statut</th>
+                    </tr>
+                </thead>
+                <tbody id="rentals-body">
+                    <!-- Rentals will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Profile Page -->
+    <div id="profile" class="page">
+        <div class="page-header">
+            <h1><i class="fas fa-user"></i> Mon Profil</h1>
+        </div>
+        
+        <div class="profile-container">
+            <div class="profile-card">
+                <h2><i class="fas fa-user-circle"></i> Informations du Compte</h2>
+                <div class="profile-info" id="account-info">
+                    <!-- Account info will be loaded here -->
+                </div>
+            </div>
+            
+            <div class="profile-card" id="client-info-section">
+                <!-- Client info will be loaded here -->
+            </div>
+            
+            <div class="profile-card" id="client-form-section">
+                <!-- Client form will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Admin Car Management -->
+    <div id="admin-cars" class="page">
+        <div class="page-header">
+            <h1><i class="fas fa-car"></i> Gestion des SUPERCARS</h1>
+        </div>
+        
+        <div class="admin-form">
+            <h2>Ajouter/Modifier une Supercar</h2>
+            <div class="form-grid">
+                <input type="text" id="car-brand" placeholder="Marque">
+                <input type="text" id="car-model" placeholder="Modèle">
+                <input type="number" id="car-year" placeholder="Année">
+                <input type="number" id="car-price" placeholder="Prix location/jour (TND)">
+            </div>
+            <textarea id="car-description" placeholder="Description" rows="3"></textarea>
+            <div class="form-actions">
+                <button class="btn btn-success" onclick="addCar()">
+                    <i class="fas fa-plus"></i> Ajouter
+                </button>
+                <button class="btn btn-warning" onclick="updateCar()">
+                    <i class="fas fa-edit"></i> Modifier
+                </button>
+                <button class="btn btn-danger" onclick="deleteCar()">
+                    <i class="fas fa-trash"></i> Supprimer
+                </button>
+                <button class="btn btn-secondary" onclick="clearCarForm()">
+                    <i class="fas fa-times"></i> Annuler
+                </button>
+            </div>
+        </div>
+        
+        <div class="table-container">
+            <table id="cars-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Marque</th>
+                        <th>Modèle</th>
+                        <th>Année</th>
+                        <th>Prix (TND)</th>
+                        <th>Disponible</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="cars-body">
+                    <!-- Cars will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Admin Clients Management -->
+    <div id="admin-clients" class="page">
+        <div class="page-header">
+            <h1><i class="fas fa-users"></i> Gestion des Clients</h1>
+        </div>
+        
+        <div class="table-container">
+            <table id="clients-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Nom</th>
+                        <th>Prénom</th>
+                        <th>Téléphone</th>
+                        <th>Email</th>
+                        <th>Date Inscription</th>
+                    </tr>
+                </thead>
+                <tbody id="clients-body">
+                    <!-- Clients will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Admin Rentals Management -->
+    <div id="admin-rentals" class="page">
+        <div class="page-header">
+            <h1><i class="fas fa-clipboard-check"></i> Gestion des Locations</h1>
+        </div>
+        
+        <div class="table-container">
+            <table id="admin-rentals-table">
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Supercar</th>
+                        <th>Client</th>
+                        <th>Date Début</th>
+                        <th>Date Fin</th>
+                        <th>Prix (TND)</th>
+                        <th>Statut</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody id="admin-rentals-body">
+                    <!-- Rentals will be loaded here -->
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- Admin Statistics -->
+    <div id="admin-stats" class="page">
+        <div class="page-header">
+            <h1><i class="fas fa-chart-bar"></i> Statistiques</h1>
+        </div>
+        
+        <div class="stats-cards">
+            <div class="stat-card">
+                <i class="fas fa-car"></i>
+                <h3 id="total-cars">0</h3>
+                <p>SUPERCARS totales</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-car-side"></i>
+                <h3 id="available-cars">0</h3>
+                <p>SUPERCARS disponibles</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-users"></i>
+                <h3 id="total-clients">0</h3>
+                <p>Clients inscrits</p>
+            </div>
+            <div class="stat-card">
+                <i class="fas fa-money-bill-wave"></i>
+                <h3 id="total-revenue">0 TND</h3>
+                <p>Revenus totaux</p>
+            </div>
+        </div>
+        
+        <div class="charts-container">
+            <div class="chart-box">
+                <canvas id="monthly-chart"></canvas>
+            </div>
+            <div class="chart-box">
+                <canvas id="brand-chart"></canvas>
+            </div>
+            <div class="chart-box">
+                <canvas id="status-chart"></canvas>
+            </div>
+            <div class="chart-box">
+                <canvas id="revenue-chart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Chatbot Modal -->
+    <div id="chatbot-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-robot"></i> Assistant IA</h2>
+                <button class="close-btn" onclick="closeChatbot()">&times;</button>
+            </div>
+            
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="message bot">
+                        <div class="message-content">
+                            <strong>🤖 Assistant:</strong> 👋 Bonjour ! Je suis votre assistant IA pour la location de SUPERCARS. Je peux vous aider avec les disponibilités, tarifs, réservations et support technique. Posez-moi vos questions !
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="chat-input">
+                    <input type="text" id="chat-input-field" placeholder="Tapez votre message..." onkeypress="handleChatKeyPress(event)">
+                    <button class="btn btn-primary" onclick="sendChatMessage()">
+                        <i class="fas fa-paper-plane"></i>
+                    </button>
+                </div>
+                
+                <div class="quick-questions">
+                    <button class="quick-btn" onclick="askQuickQuestion('SUPERCARS disponibles?')">
+                        🚗💨 Disponibilités
+                    </button>
+                    <button class="quick-btn" onclick="askQuickQuestion('Prix location?')">
+                        💰 Tarifs
+                    </button>
+                    <button class="quick-btn" onclick="askQuickQuestion('Comment réserver?')">
+                        📅 Réservation
+                    </button>
+                    <button class="quick-btn" onclick="askQuickQuestion('Support technique')">
+                        🆘 Support
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rental Modal -->
+    <div id="rental-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="rental-title"></h2>
+                <button class="close-btn" onclick="closeRentalModal()">&times;</button>
+            </div>
+            
+            <div class="rental-form">
+                <div class="input-group">
+                    <label>Date de début:</label>
+                    <input type="date" id="rental-start-date" value="<?php echo date('Y-m-d'); ?>">
+                </div>
+                
+                <div class="input-group">
+                    <label>Date de fin:</label>
+                    <input type="date" id="rental-end-date">
+                </div>
+                
+                <div class="input-group">
+                    <label>Prix total:</label>
+                    <span id="rental-total-price" class="price-display">0.00 TND</span>
+                </div>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-warning" onclick="calculateRentalPrice()">
+                        <i class="fas fa-calculator"></i> Calculer Prix
+                    </button>
+                    <button class="btn btn-success" onclick="confirmRental()">
+                        <i class="fas fa-check"></i> Confirmer Location
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="import-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2><i class="fas fa-file-export"></i> Exporter les données</h2>
+                <button class="close-btn" onclick="closeImportModal()">&times;</button>
+            </div>
+            
+            <div class="import-form">
+                <select id="export-type">
+                    <option value="cars">SUPERCARS</option>
+                    <option value="clients">Clients</option>
+                    <option value="rentals">Locations</option>
+                    <option value="all">Toutes les données</option>
+                </select>
+                
+                <select id="export-format">
+                    <option value="csv">CSV</option>
+                    <option value="json">JSON</option>
+                </select>
+                
+                <div class="modal-actions">
+                    <button class="btn btn-primary" onclick="exportData()">
+                        <i class="fas fa-download"></i> Exporter
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast"></div>
+
+    <!-- Scripts -->
+    <script src="database.js"></script>
+    <script src="auth.js"></script>
+    <script src="chatbot.js"></script>
+    <script src="charts.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
